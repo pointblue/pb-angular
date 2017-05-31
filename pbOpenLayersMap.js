@@ -40,7 +40,7 @@
      */
 
     angular
-        .module('stopover-map.map')
+        .module('PointBlue.OpenLayersMap')
         .factory('pbOpenLayersMapFactory', pbOpenLayersMapFactory);
 
     function pbOpenLayersMapFactory(){
@@ -81,4 +81,4 @@
         }
     }
 
-})( OpenLayers );
+})( ol );
