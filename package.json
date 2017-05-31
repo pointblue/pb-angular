@@ -1,0 +1,19 @@
+{
+  "name": "pb-angular",
+  "version": "1.0.0",
+  "description": "Angular components that can be used with Point Blue apps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pointblue/pb-angular.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pointblue/pb-angular/issues"
+  },
+  "homepage": "https://github.com/pointblue/pb-angular#readme"
+}
