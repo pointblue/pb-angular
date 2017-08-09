@@ -352,7 +352,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
                 distance = Math.floor((vertical ? dimensions.height : dimensions.width) * multiplier);
 
                 tickCtx.fillRect(vertical ? 0 : distance - 1,
-                    vertical ? distance - 1 : 0,
+                    vertical ? dimensions.height - distance - 1 : 0,
                     vertical ? dimensions.width : 2,
                     vertical ? 2 : dimensions.height);
             }
