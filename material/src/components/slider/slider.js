@@ -222,7 +222,8 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
             updateMin( angular.isObject(scope.steps[0]) ? scope.steps[0].value : scope.steps[0] );
             var lastIndex = scope.steps.length - 1;
             updateMax( angular.isObject(scope.steps[lastIndex]) ? scope.steps[lastIndex].value : scope.steps[lastIndex] );
-            updateStep(1);
+            attr.hasOwnProperty('stepsEqual') ? updateStepsEqual(true) : updateStepsEqual(false);
+            stepsEqual ? updateStep(Math.round(max/scope.steps.length)) : updateStep(1);
         } else {
             updateSteps(null);
             angular.isDefined(attr.min) ? attr.$observe('min', updateMin) : updateMin(0);
@@ -283,6 +284,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
         var step;
         var round;
         var steps;
+        var stepsEqual;
         function updateMin(value) {
             min = parseFloat(value);
             element.attr('aria-valuemin', value);
@@ -302,6 +304,9 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
         }
         function updateSteps(value){
             steps = value;
+        }
+        function updateStepsEqual(value){
+            stepsEqual = value;
         }
         function updateAriaDisabled() {
             element.attr('aria-disabled', !!isDisabled());
@@ -343,16 +348,16 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
             var distance;
             var multiplier;
 
-            for (var i = 0; i <= numSteps; i++) {
+            for (var i = 0; i < numSteps; i++) {
                 var trackTicksStyle = $window.getComputedStyle(tickContainer[0]);
                 tickCtx.fillStyle = trackTicksStyle.color || 'black';
 
-                multiplier = steps ? valueToPercent( angular.isObject(steps[i]) ? steps[i].value : steps[i] ) : (i / numSteps);
+                multiplier = steps && ! stepsEqual ? valueToPercent( angular.isObject(steps[i]) ? steps[i].value : steps[i] ) : (i / numSteps);
 
                 distance = Math.floor((vertical ? dimensions.height : dimensions.width) * multiplier);
 
                 tickCtx.fillRect(vertical ? 0 : distance - 1,
-                    vertical ? dimensions.height - distance - 1 : 0,
+                    vertical ? dimensions.height - distance - 2 : 0,
                     vertical ? dimensions.width : 2,
                     vertical ? 2 : dimensions.height);
             }
@@ -439,6 +444,8 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
             }
 
             ngModelCtrl.$viewValue = minMaxValidator(ngModelCtrl.$viewValue);
+
+
 
             var percent = valueToPercent(ngModelCtrl.$viewValue);
             scope.modelValue = ngModelCtrl.$viewValue;
@@ -632,13 +639,33 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
          * @returns {*}
          */
         function percentToValue( percent ) {
-            var adjustedPercent = invert ? (1 - percent) : percent;
-            return (min + adjustedPercent * (max - min));
+            //TODO: If steps are equal, the percent should give the closest step, and the return value should be that step
+            if(steps && stepsEqual){
+                var index = Math.round(percent * steps.length);
+                //TODO: This needs to work with objects
+                return parseInt( steps[index] );
+            } else {
+                var adjustedPercent = invert ? (1 - percent) : percent;
+                return (min + adjustedPercent * (max - min));
+            }
+
         }
 
         function valueToPercent( val ) {
+            if(steps && stepsEqual) {
+                return stepValueToPercent( val );
+            }
             var percent = (val - min) / (max - min);
             return invert ? (1 - percent) : percent;
+        }
+
+        function stepValueToPercent( stepVal ) {
+            if( !angular.isUndefined(stepVal) && stepVal !== null && !isNaN(stepVal)){
+                //TODO: This needs to work with objects
+                var index = steps.indexOf(stepVal.toString());
+                return index / steps.length;
+
+            }
         }
     }
 }
