@@ -661,9 +661,10 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
 
         function stepValueToPercent( stepVal ) {
             if( !angular.isUndefined(stepVal) && stepVal !== null && !isNaN(stepVal)){
+                var normalizedValue = angular.isString(steps[0]) ? stepVal.toString() : stepVal;
                 //TODO: This needs to work with objects
-                var index = steps.indexOf(stepVal.toString());
-                return index / steps.length;
+                var index = steps.indexOf(normalizedValue);
+                return index / steps.length + 1;
 
             }
         }
