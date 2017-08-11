@@ -326,7 +326,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
                 throw new Error(msg);
             }
 
-            var numSteps = steps ? steps.length : Math.floor( (max - min) / step );
+            var numSteps = steps ? steps.length-1   : Math.floor( (max - min) / step );
             if (!tickCanvas) {
                 tickCanvas = angular.element('<canvas>').css('position', 'absolute');
                 tickContainer.append(tickCanvas);
@@ -348,16 +348,20 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
             var distance;
             var multiplier;
 
-            for (var i = 0; i < numSteps; i++) {
+            for (var i = 0; i <= numSteps; i++) {
                 var trackTicksStyle = $window.getComputedStyle(tickContainer[0]);
                 tickCtx.fillStyle = trackTicksStyle.color || 'black';
 
-                multiplier = steps && ! stepsEqual ? valueToPercent( angular.isObject(steps[i]) ? steps[i].value : steps[i] ) : (i / numSteps);
+                if(steps && ! stepsEqual){
+                    multiplier = valueToPercent( angular.isObject(steps[i]) ? steps[i].value : steps[i] )
+                } else {
+                    multiplier = (i / numSteps)
+                }
 
                 distance = Math.floor((vertical ? dimensions.height : dimensions.width) * multiplier);
 
                 tickCtx.fillRect(vertical ? 0 : distance - 1,
-                    vertical ? dimensions.height - distance - 2 : 0,
+                    vertical ? dimensions.height - distance - 1 : 0,
                     vertical ? dimensions.width : 2,
                     vertical ? 2 : dimensions.height);
             }
@@ -444,8 +448,6 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
             }
 
             ngModelCtrl.$viewValue = minMaxValidator(ngModelCtrl.$viewValue);
-
-
 
             var percent = valueToPercent(ngModelCtrl.$viewValue);
             scope.modelValue = ngModelCtrl.$viewValue;
@@ -641,7 +643,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
         function percentToValue( percent ) {
             //TODO: If steps are equal, the percent should give the closest step, and the return value should be that step
             if(steps && stepsEqual){
-                var index = Math.round(percent * steps.length);
+                var index = Math.round(percent * (steps.length - 1));
                 //TODO: This needs to work with objects
                 return parseInt( steps[index] );
             } else {
@@ -664,7 +666,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
                 var normalizedValue = angular.isString(steps[0]) ? stepVal.toString() : stepVal;
                 //TODO: This needs to work with objects
                 var index = steps.indexOf(normalizedValue);
-                return index / steps.length + 1;
+                return index / (steps.length - 1);
 
             }
         }
