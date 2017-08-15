@@ -645,7 +645,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
             if(steps && stepsEqual){
                 var index = Math.round(percent * (steps.length - 1));
                 //TODO: This needs to work with objects
-                return parseInt( steps[index] );
+                return parseInt( angular.isObject(steps[index]) ? steps[index].value : steps[index] );
             } else {
                 var adjustedPercent = invert ? (1 - percent) : percent;
                 return (min + adjustedPercent * (max - min));
@@ -664,10 +664,21 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
         function stepValueToPercent( stepVal ) {
             if( !angular.isUndefined(stepVal) && stepVal !== null && !isNaN(stepVal)){
                 var normalizedValue = angular.isString(steps[0]) ? stepVal.toString() : stepVal;
-                //TODO: This needs to work with objects
-                var index = steps.indexOf(normalizedValue);
+                var index = getStepIndex(normalizedValue);
                 return index / (steps.length - 1);
 
+            }
+        }
+
+        function getStepIndex( value ){
+            if( angular.isObject( steps[0]) ){
+                for(var i=0;i<steps.length;i++){
+                    if(steps[i].value.toString() === value.toString()){
+                        return i;
+                    }
+                }
+            } else {
+                return steps.indexOf( value );
             }
         }
     }

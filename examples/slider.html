@@ -27,6 +27,13 @@
                 var vm = this;
                 vm.sliderModel = 0;
                 vm.sliderSteps = [0,25,50,75,100,125,150,175,200,500];
+                vm.objectSliderModel = 0;
+                vm.objectSliderSteps = [
+                    {name:'None', value:0},
+                    {name:'Annual', value:1},
+                    {name:'20 year', value:20},
+                    {name:'100 year', value:100}
+                ];
             }
 
         })();
@@ -39,6 +46,13 @@
                           md-discrete
                           md-vertical
                           steps="vm.sliderSteps"
+                          steps-equal></pb-md-slider>
+        </div>
+        <div style="padding: 2em;">
+            <pb-md-slider ng-model="vm.objectSliderModel"
+                          md-discrete
+                          md-vertical
+                          steps="vm.objectSliderSteps"
                           steps-equal></pb-md-slider>
         </div>
     </main>
