@@ -45,6 +45,11 @@
 
     function pbOpenLayersMapFactory(){
 
+        var sourceConstructorMapping = {
+            OSM: ol.source.OSM,
+            XYZ: ol.source.XYZ
+        };
+
         return {
             createMap : createMap
         };
@@ -59,8 +64,42 @@
             ];
 
             normalizedOptions.view = createViewFromOptions(options);
+            normalizedOptions.layers = options.layers ? createLayersFromOptions(options.layers) : [];
 
             return new ol.Map(normalizedOptions);
+        }
+
+        function createLayersFromOptions(layerOptions){
+            var layers = [];
+            for(var i = 0;i<layerOptions.length;i++){
+                layers.push(createLayerFromOptions(layerOptions[i]));
+            }
+            return layers;
+        }
+
+        function createLayerFromOptions(options){
+            var layer;
+            if(options.hasOwnProperty('tile')){
+                layer = createTileFromOptions(options.tile);
+            }
+            return layer;
+        }
+
+        function createTileFromOptions(options){
+            var tileOptions = {};
+            if(options.hasOwnProperty('source')){
+                tileOptions.source = createSourceFromOptions(options.source);
+            }
+            return new ol.layer.Tile(tileOptions);
+        }
+
+        function createSourceFromOptions(options){
+            var sourceConstructor = sourceConstructorMapping[options.type];
+            var constructorOptions = {};
+            if(options.hasOwnProperty('url')){
+                constructorOptions.url = options.url;
+            }
+            return new sourceConstructor(constructorOptions);
         }
 
         function createViewFromOptions(options){
