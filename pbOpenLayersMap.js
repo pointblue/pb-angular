@@ -116,6 +116,12 @@
             if(options.view.hasOwnProperty('zoom')){
                 normalizedViewOptions.zoom = options.view.zoom;
             }
+            if(options.view.hasOwnProperty('minZoom')){
+                normalizedViewOptions.minZoom = options.view.minZoom;
+            }
+            if(options.view.hasOwnProperty('maxZoom')){
+                normalizedViewOptions.maxZoom = options.view.maxZoom;
+            }
             return normalizedViewOptions;
         }
     }
