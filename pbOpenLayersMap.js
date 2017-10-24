@@ -37,7 +37,7 @@
 
         }
 
-        function handleVisibleLayerChanged( oldValue, newValue ){
+        function handleVisibleLayerChanged( newValue, oldValue ){
             setLayerVisibility( oldValue, false );
             setLayerVisibility( newValue, true );
         }
