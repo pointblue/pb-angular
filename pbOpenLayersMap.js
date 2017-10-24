@@ -26,9 +26,24 @@
             if( ! attrs.hasOwnProperty('id')){
                 throw 'pbOpenLayersMap MUST have an id attribute set';
             }
-            var options = attrs.hasOwnProperty('pbOpenLayersMap') ? scope.$eval(attrs['pbOpenLayersMap']) : {};
+            var options = attrs.hasOwnProperty('pbOpenLayersMap') ? scope.$eval( attrs['pbOpenLayersMap'] ) : {};
             map = pbOpenLayersMapFactory.createMap( options );
             map.setTarget( attrs['id'] );
+
+            if( attrs.hasOwnProperty('visibleLayer') ){
+                scope.$watch( attrs['visibleLayer'], handleVisibleLayerChanged );
+            }
+
+
+        }
+
+        function handleVisibleLayerChanged( oldValue, newValue ){
+            setLayerVisibility( oldValue, false );
+            setLayerVisibility( newValue, true );
+        }
+
+        function setLayerVisibility( layerIndex, isVisible ){
+            map.getLayers().item( layerIndex ).setVisible( isVisible );
         }
 
     }
@@ -89,6 +104,9 @@
             var tileOptions = {};
             if(options.hasOwnProperty('source')){
                 tileOptions.source = createSourceFromOptions(options.source);
+            }
+            if(options.hasOwnProperty('visible')) {
+                tileOptions.visible = options.visible;
             }
             return new ol.layer.Tile(tileOptions);
         }

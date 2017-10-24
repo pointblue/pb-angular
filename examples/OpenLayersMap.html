@@ -27,6 +27,7 @@
 
             function MapPageController(){
                 var vm = this;
+                vm.visibleLayer = 2;
                 vm.mapOptions = {
                     layers:[
                         {
@@ -40,8 +41,18 @@
                             tile:{
                                 source:{
                                     type:'XYZ',
-                                    url:'http://geo.pointblue.org/glc_stopover_tiles/Z{z}/{y}_{x}.png'
-                                }
+                                    url:'http://geo.pointblue.org/tiles/glc_stop_over/land_cover/Z{z}/{y}_{x}.png'
+                                },
+                                visible: false
+                            }
+                        },
+                        {
+                            tile:{
+                                source:{
+                                    type:'XYZ',
+                                    url:'http://geo.pointblue.org/tiles/glc_stop_over/landbird_model/Z{z}/{y}_{x}.png'
+                                },
+                                visible: false
                             }
                         }
                     ],
@@ -61,7 +72,7 @@
 </head>
 <body>
     <main ng-controller="MapPageController as vm">
-        <div id="map" pb-open-layers-map="vm.mapOptions"></div>
+        <div id="map" pb-open-layers-map="vm.mapOptions" visible-layer="vm.visibleLayer"></div>
     </main>
 </body>
 </html>
