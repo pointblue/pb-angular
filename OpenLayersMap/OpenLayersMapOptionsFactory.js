@@ -1,68 +1,18 @@
 (function( ol ){
 
     /**
-     * This file is going to be removed. Apps will define their own directive and use the a factory to create
-     */
-
-    //Declare our module
-
-    angular
-        .module('PointBlue.OpenLayersMap', []);
-
-    //Define directive for our module
-
-    angular
-        .module('PointBlue.OpenLayersMap')
-        .directive('pbOpenLayersMap', pbOpenLayersMap);
-
-    pbOpenLayersMap.$inject = ['pbOpenLayersMapFactory'];
-
-    function pbOpenLayersMap(pbOpenLayersMapFactory){
-
-        var map;
-
-        return {
-            restrict:'A',
-            'link': link
-        };
-
-        function link( scope, element, attrs, controller, transcludeFn ){
-            if( ! attrs.hasOwnProperty('id')){
-                throw 'pbOpenLayersMap MUST have an id attribute set';
-            }
-            var options = attrs.hasOwnProperty('pbOpenLayersMap') ? scope.$eval( attrs['pbOpenLayersMap'] ) : {};
-            map = pbOpenLayersMapFactory.createMap( options );
-            map.setTarget( attrs['id'] );
-
-            if( attrs.hasOwnProperty('visibleLayer') ){
-                scope.$watch( attrs['visibleLayer'], handleVisibleLayerChanged );
-            }
-
-
-        }
-
-        function handleVisibleLayerChanged( newValue, oldValue ){
-            setLayerVisibility( oldValue, false );
-            setLayerVisibility( newValue, true );
-        }
-
-        function setLayerVisibility( layerIndex, isVisible ){
-            map.getLayers().item( layerIndex ).setVisible( isVisible );
-        }
-
-    }
-
-    /**
-     * pbOpenLayersMapFactory
+     * OpenLayersMapOptionsFactory
      *
-     * Create OpenLayers map for use with angular directive. Depends on the OpenLayers library being created first
+     * Create options that can be used to instantiate an openlayers map.
+     * The hope for this module is to allow controllers to define simple openlayers parameters
+     *
      */
 
     angular
         .module('PointBlue.OpenLayersMap')
-        .factory('pbOpenLayersMapFactory', pbOpenLayersMapFactory);
+        .factory('OpenLayersMapOptionsFactory', OpenLayersMapOptionsFactory);
 
-    function pbOpenLayersMapFactory(){
+    function OpenLayersMapOptionsFactory(){
 
         var sourceConstructorMapping = {
             OSM: ol.source.OSM,
@@ -70,22 +20,17 @@
         };
 
         return {
-            createMap : createMap
+            createMapOptions : createMapOptions
         };
 
-        function createMap(options){
+        function createMapOptions( basicOptions ){
 
-            var normalizedOptions = {};
-            normalizedOptions.layers = [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                })
-            ];
+            var options = {};
 
-            normalizedOptions.view = createViewFromOptions(options);
-            normalizedOptions.layers = options.layers ? createLayersFromOptions(options.layers) : [];
+            options.view = createViewFromOptions(basicOptions);
+            options.layers = basicOptions.layers ? createLayersFromOptions(basicOptions.layers) : [];
 
-            return new ol.Map(normalizedOptions);
+            return options;
         }
 
         function createLayersFromOptions(layerOptions){
