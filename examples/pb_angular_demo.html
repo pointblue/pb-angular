@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>pb library example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+    <script src="../pb.js"></script>
+    <script src="../pbGraphics.js"></script>
+    <script>
+        angular.module('myapp',['pb', 'pb.Graphics']);
+
+
+        angular
+            .module('myapp')
+            .controller('SvgToJpegController', function(pb,$scope){
+
+                $scope.imgSrc = null;
+
+                $scope.$watch('additionalWidth', refreshRasterImage);
+                $scope.additionalWidth = 0;
+                refreshRasterImage();
+
+                function refreshRasterImage(){
+                    var svg = document.querySelector('#star');
+                    var svgWidth = parseInt( svg.getAttribute('width') );
+                    var svgHeight = parseInt( svg.getAttribute('height') );
+                    //adjust the height in proportion to the width
+                    var adjustedSvgDim = pb.Graphics.adjustByWidth(svgWidth, svgHeight, svgWidth + $scope.additionalWidth * 100);
+                    //create a a raster image with the new dimensions
+                    pb.Graphics.svgToDataUrl(svg, function( dataUrl ){
+                            //set our controller's variable to the new data url
+                            $scope.imgSrc = dataUrl;
+                        },
+                        //the new width
+                        adjustedSvgDim[0],
+                        //the new height
+                        adjustedSvgDim[1]
+                    );
+                }
+            });
+
+        //when the DOM's finished loading
+        angular.element(document).ready(function(){
+            //fire it up
+            angular.bootstrap(document, ['myapp']);
+        });
+
+
+    </script>
+</head>
+<body>
+
+    <div ng-controller="SvgToJpegController">
+        <h3>SVG Graphics</h3>
+        <p>This is an SVG graphic made in HTML</p>
+        <textarea style="width: 500px;height: 150px;">
+<svg id="star" height="210" width="500" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:nonzero;"/>
+</svg>
+        </textarea>
+        <div>
+            <svg id="star" height="210" width="500" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:nonzero;"/>
+                Sorry, your browser does not support inline SVG.
+            </svg>
+        </div>
+
+        <h3>Raster image create from SVG</h3>
+        <p>
+            Here we create a raster image from the SVG above. It is represented as a data url, making it very portable.<br>
+            We also calculate a new image height based on desired width.<br>
+        </p>
+        <div>
+            Width multiplier ( x 100px)<br>
+            <input type="number" ng-model="additionalWidth">
+        </div>
+        <!-- the raster image created from the svg -->
+        <p ng-show="imgSrc"><img ng-src="{{imgSrc}}"></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>pb library demo</title>
+    <script src="../pb.js"></script>
+    <script src="../pbGraphics.js"></script>
+    <script>
+        function handleButtonClick(){
+            var svgNode = document.querySelector('#star');
+            var factorNode = document.querySelector('#factor');
+            var width = svgNode.getAttribute('width');
+            var height = svgNode.getAttribute('height');
+            var factor = factorNode.value;
+            var newWidth = parseInt(width) * parseInt(factor);
+            var newHeight = parseInt(height) * parseInt(factor);
+            //convert svg node to a data url. when the url is returned, set it as the `src` attribute of an image
+            pb.Graphics.svgToDataUrl(svgNode, function( dataUrl ){
+                    var graphicOutput = document.querySelector('#graphic-output');
+                    graphicOutput.setAttribute('src', dataUrl);
+                },
+                newWidth,
+                newHeight
+            );
+        }
+    </script>
+</head>
+<body>
+
+<!-- NOTE: Element must have `xmlns` and `version` attributes -->
+
+<svg id="star" height="210" width="500" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:nonzero;"/>
+    Sorry, your browser does not support inline SVG.
+</svg>
+<div>
+    <button onclick="handleButtonClick();">svg to raster</button>
+    <div>
+        Magnification factor: <input id="factor" type="number">
+    </div>
+</div>
+
+<div>
+    <img id="graphic-output" src="">
+</div>
+
+</body>
+</html>
