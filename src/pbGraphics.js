@@ -3,12 +3,12 @@
     Graphics.$inject = ['$rootScope'];
 
     /**
-     * Maps library for Point Blue.
+     * Graphics library for Point Blue.
      * Contains graphical functions which are useful for multiple projects.
-     * Used as `pb.Maps`
+     * Used as `pb.Graphics`
      *
      * @class
-     * @alias pb.Maps
+     * @alias pb.Graphics
      * @param $rootScope
      * @returns {{adjustByWidth: adjustByWidth, svgToDataUrl: svgToDataUrl}}
      */
@@ -46,7 +46,7 @@
 
                 //geth height from the node if no width argument given
                 if( !h && svg.getAttribute('height') )
-                h = parseInt( svg.getAttribute('height') );
+                    h = parseInt( svg.getAttribute('height') );
             }
             if(w){
                 canvas.width = w;
@@ -108,10 +108,10 @@
 
     function GraphicsFactory(pb){
         //add to the root object if needed
-        if( ! pb.Maps ){
-            pb.Maps = Graphics();
+        if( ! pb.Graphics ){
+            pb.Graphics = Graphics();
         }
-        return pb.Maps;
+        return pb.Graphics;
     }
 
     if(root.angular){
@@ -139,7 +139,7 @@
 
         function run($injector){
             //force the factory function to run. this adds the `Maps` object to the `pb` object
-            $injector.get('Maps');
+            $injector.get('Graphics');
         }
 
 
