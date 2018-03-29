@@ -1,8 +1,18 @@
 (function( root ){
 
-    Graphics.$inject = ['$rootScope'];
+    Maps.$inject = ['$rootScope'];
 
-    function Graphics($rootScope){
+    /**
+     * Maps library for Point Blue.
+     * Contains map functions which are useful for multiple projects.
+     * Used as `pb.Maps`
+     *
+     * @class
+     * @alias pb.Maps
+     * @param $rootScope
+     * @returns {{adjustByWidth: adjustByWidth, svgToDataUrl: svgToDataUrl}}
+     */
+    function Maps($rootScope){
 
         return {
             adjustByWidth:adjustByWidth,
@@ -10,16 +20,18 @@
         };
 
         /**
-         * Create an image data url from svg html
+         * Create an image data url from svg html.
+         * SVG root element must have the `version` and `xmlns` attributes correctly set.
+         * Returns data url in supplied callback function
          *
-         * SVG root element must have the `version` and `xmlns` attributes correctly set
-         * @param svg HTMLElement | string And svg element or the complete html of the svg element
-         * @param callback required function called with the image data url as the only argument
-         * @param w integer width of the output image
-         * @param h integer height of the output image
-         * @param imageType string 'png' or 'jpeg' works well. defaults to 'jpeg'
-         * @param backgroundColor null to ignore this option
-         * @private
+         *
+         * @async
+         * @param {HTMLElement|string} svg And svg element or the complete html of the svg element
+         * @param {function} callback required function called with the image data url as the only argument
+         * @param {int} w integer width of the output image
+         * @param {int} h integer height of the output image
+         * @param {string} imageType string 'png' or 'jpeg' works well. defaults to 'jpeg'
+         * @param {string} backgroundColor null to ignore this option
          */
         function svgToDataUrl( svg, callback, w, h, imageType, backgroundColor){
             var svgIsHtml = typeof svg === 'string';
@@ -34,7 +46,7 @@
 
                 //geth height from the node if no width argument given
                 if( !h && svg.getAttribute('height') )
-                h = parseInt( svg.getAttribute('height') );
+                    h = parseInt( svg.getAttribute('height') );
             }
             if(w){
                 canvas.width = w;
@@ -73,10 +85,10 @@
          * to another.
          *
          *
-         * @param width Current width
-         * @param height Current height
-         * @param targetWidth Desired width
-         * @returns {*[]} Array First item is the width, second item is the height
+         * @param {int}width Current width
+         * @param {int} height Current height
+         * @param {int} targetWidth Desired width
+         * @returns {Array} First element is the targetWidth, second is the resultant height
          */
         function adjustByWidth(width, height, targetWidth){
             //ratio of the width to the target width
@@ -92,14 +104,14 @@
 
     }
 
-    GraphicsFactory.$inject = ['pb'];
+    MapsFactory.$inject = ['pb'];
 
-    function GraphicsFactory(pb){
+    function MapsFactory(pb){
         //add to the root object if needed
-        if( ! pb.Graphics ){
-            pb.Graphics = Graphics();
+        if( ! pb.Maps ){
+            pb.Maps = Maps();
         }
-        return pb.Graphics;
+        return pb.Maps;
     }
 
     if(root.angular){
@@ -111,29 +123,26 @@
         var angular = root.angular;
 
         //new module
-        angular.module('pb.Graphics', ['pb']);
+        angular.module('pb.Maps', ['pb']);
 
         //provides the graphics factory
-        angular
-            .module('pb.Graphics')
-            .factory('Graphics', GraphicsFactory)
-        ;
 
         run.$inject = ['$injector'];
         angular
-            .module('pb.Graphics')
+            .module('pb.Maps')
+            .factory('Graphics', MapsFactory)
             .run(run)
         ;
 
         function run($injector){
-            //force the factory function to run. this adds the `Graphics` object to the `pb` object
-            $injector.get('Graphics');
+            //force the factory function to run. this adds the `Maps` object to the `pb` object
+            $injector.get('Maps');
         }
 
 
     } else {
         root.pb = root.pb || {};
-        root.pb.Graphics = Graphics();
+        root.pb.Maps = Maps();
     }
 
 

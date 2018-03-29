@@ -4,7 +4,8 @@
   "description": "Angular components that can be used with Point Blue apps.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jsdoc":"./node_modules/.bin/jsdoc -r ./src -d docs/ -R ./README.md"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/pointblue/pb-angular/issues"
   },
-  "homepage": "https://github.com/pointblue/pb-angular#readme"
+  "homepage": "https://github.com/pointblue/pb-angular#readme",
+  "devDependencies": {
+    "esdoc": "^1.0.4",
+    "esdoc-standard-plugin": "^1.0.0",
+    "jsdoc": "^3.5.5"
+  }
 }
