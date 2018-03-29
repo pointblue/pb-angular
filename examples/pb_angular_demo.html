@@ -7,7 +7,7 @@
     <script src="../pb.js"></script>
     <script src="../pbGraphics.js"></script>
     <script>
-        angular.module('myapp',['pb', 'pb.Graphics']);
+        angular.module('myapp',['pb', 'pb.Maps']);
 
 
         angular
@@ -25,9 +25,9 @@
                     var svgWidth = parseInt( svg.getAttribute('width') );
                     var svgHeight = parseInt( svg.getAttribute('height') );
                     //adjust the height in proportion to the width
-                    var adjustedSvgDim = pb.Graphics.adjustByWidth(svgWidth, svgHeight, svgWidth + $scope.additionalWidth * 100);
+                    var adjustedSvgDim = pb.Maps.adjustByWidth(svgWidth, svgHeight, svgWidth + $scope.additionalWidth * 100);
                     //create a a raster image with the new dimensions
-                    pb.Graphics.svgToDataUrl(svg, function( dataUrl ){
+                    pb.Maps.svgToDataUrl(svg, function(dataUrl ){
                             //set our controller's variable to the new data url
                             $scope.imgSrc = dataUrl;
                         },

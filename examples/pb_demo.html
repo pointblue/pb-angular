@@ -15,7 +15,7 @@
             var newWidth = parseInt(width) * parseInt(factor);
             var newHeight = parseInt(height) * parseInt(factor);
             //convert svg node to a data url. when the url is returned, set it as the `src` attribute of an image
-            pb.Graphics.svgToDataUrl(svgNode, function( dataUrl ){
+            pb.Maps.svgToDataUrl(svgNode, function(dataUrl ){
                     var graphicOutput = document.querySelector('#graphic-output');
                     graphicOutput.setAttribute('src', dataUrl);
                 },

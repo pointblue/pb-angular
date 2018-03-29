@@ -1,11 +1,16 @@
-/**
- * A root object to attach stuff to
- */
 (function( root ){
 
     pbFactory.$inject = [];
 
-    //save a reference to the root object so it can be augmented
+    /**
+     * Root namespace to attach all support libraries.
+     *
+     * Example: pb.Maps
+     *
+     * @class
+     * @alias pb
+     * @type {{}}
+     */
     var PointBlue = {};
 
     //just return the root object
